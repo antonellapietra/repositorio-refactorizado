@@ -8,7 +8,7 @@
 *    Status      : Prototype
 *    Iteration   : 3.0 ( prototype )
 */
-
+//asigna una materia a un estudiante, guarda si esta aprobada o no
 function assignSubjectToStudent($conn, $student_id, $subject_id, $approved) 
 {
     $sql = "INSERT INTO students_subjects (student_id, subject_id, approved) VALUES (?, ?, ?)";
@@ -65,7 +65,7 @@ function updateStudentSubject($conn, $id, $student_id, $subject_id, $approved)
 
     return ['updated' => $stmt->affected_rows];
 }
-
+// Elimina una asignación entre un estudiante y una materia según el ID de la tabla intermedia
 function removeStudentSubject($conn, $id) 
 {
     $sql = "DELETE FROM students_subjects WHERE id = ?";

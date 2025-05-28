@@ -9,6 +9,7 @@
 *    Iteration   : 3.0 ( prototype )
 */
 
+//devuelve todas las materias registradas en bd
 function getAllSubjects($conn) 
 {
     $sql = "SELECT * FROM subjects";
@@ -16,6 +17,7 @@ function getAllSubjects($conn)
     return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
 }
 
+//devuelve una materia especifica segun id
 function getSubjectById($conn, $id) 
 {
     $sql = "SELECT * FROM subjects WHERE id = ?";
@@ -27,6 +29,7 @@ function getSubjectById($conn, $id)
     return $result->fetch_assoc(); 
 }
 
+//crea una nueva materia con el nombre recibido
 function createSubject($conn, $name) 
 {
     $sql = "INSERT INTO subjects (name) VALUES (?)";
@@ -41,6 +44,7 @@ function createSubject($conn, $name)
     ];
 }
 
+//actualiza nombre de materia existente segun id
 function updateSubject($conn, $id, $name) 
 {
     $sql = "UPDATE subjects SET name = ? WHERE id = ?";
@@ -51,6 +55,7 @@ function updateSubject($conn, $id, $name)
     return ['updated' => $stmt->affected_rows];
 }
 
+//elimina una materia segun id
 function deleteSubject($conn, $id) 
 {
     $sql = "DELETE FROM subjects WHERE id = ?";

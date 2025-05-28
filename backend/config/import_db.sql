@@ -4,6 +4,7 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+/*Elimina la base de datos 'students_db_3' si existe y luego la vuelve a crear*/
 DROP DATABASE IF EXISTS `students_db_3`;
 CREATE DATABASE `students_db_3` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `students_db_3`;
@@ -14,6 +15,7 @@ CREATE USER 'students_user_3'@'localhost' IDENTIFIED BY '12345';
 /*Otorgar todos los permisos sobre la base de datos*/
 GRANT ALL PRIVILEGES ON students_db_3.* TO 'students_user_3'@'localhost';
 
+-- Elimina la tabla 'students' si existe y luego la crea
 DROP TABLE IF EXISTS `students`;
 CREATE TABLE `students` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -24,11 +26,13 @@ CREATE TABLE `students` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--Inserta informacion de estudiantes
 INSERT INTO `students` (`id`, `fullname`, `email`, `age`) VALUES
 (1,	'Ana García',	'ana@example.com',	21),
 (2,	'Lucas Torres',	'lucas@example.com',	24),
 (3,	'Marina Díaz',	'marina@example.com',	22);
 
+-- Elimina la tabla 'subjects_subjects' si existe y luego la crea
 DROP TABLE IF EXISTS `students_subjects`;
 CREATE TABLE `students_subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -42,6 +46,7 @@ CREATE TABLE `students_subjects` (
   CONSTRAINT `students_subjects_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--Inserta informacion a la tabla 'students_subjects' en relacion estudiante-materia
 INSERT INTO `students_subjects` (`id`, `student_id`, `subject_id`, `approved`) VALUES
 (1,	1,	1,	1),
 (2,	2,	2,	0);

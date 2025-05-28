@@ -14,13 +14,14 @@
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
 
+//habilita los metodos y headers que acepta el servidor
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 function sendCodeMessage($code, $message = "")
 {
-    http_response_code($code);
+    http_response_code($code); //establece codigo HTTP
     echo json_encode(["message" => $message]);
     exit();
 }

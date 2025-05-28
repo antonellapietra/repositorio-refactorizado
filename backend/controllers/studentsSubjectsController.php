@@ -10,13 +10,14 @@
 */
 
 require_once("./models/studentsSubjects.php");
-
+//funcion para obtener todas las relaciones entre estudiantes y materias
 function handleGet($conn) 
 {
     $studentsSubjects = getAllSubjectsStudents($conn);
     echo json_encode($studentsSubjects);
 }
 
+//funcion para asignar una materia a un estudiante
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -33,6 +34,7 @@ function handlePost($conn)
     }
 }
 
+//funcion para actualizar la relacion entre estudiante y materia
 function handlePut($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -56,6 +58,7 @@ function handlePut($conn)
     }
 }
 
+//funcion para eliminar una asignacion entre estudiante y materia
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);

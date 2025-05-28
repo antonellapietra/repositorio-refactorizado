@@ -11,6 +11,7 @@
 
 require_once("./models/subjects.php");
 
+//obtencion de materias
 function handleGet($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -27,6 +28,7 @@ function handleGet($conn)
     }
 }
 
+//creacion de una nueva materia
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -43,6 +45,7 @@ function handlePost($conn)
     }
 }
 
+//actualizacion de una materia existente
 function handlePut($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -59,6 +62,7 @@ function handlePut($conn)
     }
 }
 
+//eliminacion de una materia
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);

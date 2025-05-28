@@ -9,18 +9,20 @@
 *    Iteration   : 3.0 ( prototype )
 */
 
+//funcion para obtener todos los estudiantes de la bd
 function getAllStudents($conn) 
 {
-    $sql = "SELECT * FROM students";
+    $sql = "SELECT * FROM students"; //Consulta SQL para seleccionar todos los estudiantes
 
     //MYSQLI_ASSOC devuelve un array ya listo para convertir en JSON:
     return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
 }
 
+//funcion para obtener un estudiante por su id
 function getStudentById($conn, $id) 
 {
-    $stmt = $conn->prepare("SELECT * FROM students WHERE id = ?");
-    $stmt->bind_param("i", $id);
+    $stmt = $conn->prepare("SELECT * FROM students WHERE id = ?"); //prepara la consulta para seleccionar el estudiante con id especifico
+    $stmt->bind_param("i", $id); //vincula el parametro id a la consulta
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -28,11 +30,12 @@ function getStudentById($conn, $id)
     return $result->fetch_assoc(); 
 }
 
+//crea un nuevo estudiante en bd
 function createStudent($conn, $fullname, $email, $age) 
 {
-    $sql = "INSERT INTO students (fullname, email, age) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO students (fullname, email, age) VALUES (?, ?, ?)"; // consulta SQL para insertar un nuevo estudiante en la base de datos
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $fullname, $email, $age);
+    $stmt->bind_param("ssi", $fullname, $email, $age); //vincula parametros
     $stmt->execute();
 
     //Se retorna un arreglo con la cantidad e filas insertadas 
@@ -40,10 +43,11 @@ function createStudent($conn, $fullname, $email, $age)
     return 
     [
         'inserted' => $stmt->affected_rows,        
-        'id' => $conn->insert_id
+        'id' => $conn->insert_id //id del nuevo estudiante insertado
     ];
 }
 
+//funcion para actualizar los datos de un estudiante
 function updateStudent($conn, $id, $fullname, $email, $age) 
 {
     $sql = "UPDATE students SET fullname = ?, email = ?, age = ? WHERE id = ?";
@@ -55,6 +59,7 @@ function updateStudent($conn, $id, $fullname, $email, $age)
     return ['updated' => $stmt->affected_rows];
 }
 
+//funcion para eliminar a un estudiante de la bd
 function deleteStudent($conn, $id) 
 {
     $sql = "DELETE FROM students WHERE id = ?";

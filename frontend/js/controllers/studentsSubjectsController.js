@@ -69,7 +69,13 @@ function setupFormHandler()
             } 
             else 
             {
-                await studentsSubjectsAPI.create(relation);
+                const res = await studentsSubjectsAPI.create(relation);
+                const response = await res.json();
+
+                if (!res.ok) {
+                    alert(response.error || 'Error desconocido al asignar relación.');
+                    return;
+                }
             }
             clearForm();
             loadRelations();
@@ -77,6 +83,14 @@ function setupFormHandler()
         catch (err) 
         {
             console.error('Error guardando relación:', err.message);
+
+            let msg = "Ocurrió un error al asignar la relación.";
+
+            if (err instanceof Error && err.message.includes("relación ya existe")) {
+                msg = "Ya existe esa relación entre estudiante y materia.";
+            }
+
+            alert(msg);
         }
     });
 }

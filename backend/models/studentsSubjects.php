@@ -11,6 +11,10 @@
 //asigna una materia a un estudiante, guarda si esta aprobada o no
 function assignSubjectToStudent($conn, $student_id, $subject_id, $approved) 
 {
+    if (checkRelationExists($conn, $student_id, $subject_id)) {
+        return ['error' => 'Esta relación ya existe entre el estudiante y la materia'];
+    }
+    
     $sql = "INSERT INTO students_subjects (student_id, subject_id, approved) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iii", $student_id, $subject_id, $approved);
@@ -74,5 +78,17 @@ function removeStudentSubject($conn, $id)
     $stmt->execute();
 
     return ['deleted' => $stmt->affected_rows];
+}
+
+// Verificar si la relación ya existe
+function checkRelationExists($conn, $student_id, $subject_id) 
+{
+    $sql = "SELECT COUNT(*) AS count FROM students_subjects WHERE student_id = ? AND subject_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $student_id, $subject_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row['count'] > 0;
 }
 ?>

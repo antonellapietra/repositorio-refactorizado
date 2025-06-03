@@ -23,14 +23,17 @@ function handlePost($conn)
     $input = json_decode(file_get_contents("php://input"), true);
     
     $result = assignSubjectToStudent($conn, $input['student_id'], $input['subject_id'], $input['approved']);
-    if ($result['inserted'] > 0) 
-    {
+    if (isset($result['error'])) {
+        http_response_code(400); // Bad Request
+        echo json_encode(["error" => $result['error']]);
+        return;
+    }
+
+    if ($result['inserted'] > 0) {
         echo json_encode(["message" => "Asignación realizada"]);
-    } 
-    else 
-    {
+    } else {
         http_response_code(500);
-        echo json_encode(["error" => "Error al asignar"]);
+        echo json_encode(["error" => "No se pudo asignar"]);
     }
 }
 

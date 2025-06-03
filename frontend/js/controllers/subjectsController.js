@@ -46,7 +46,20 @@ function setupSubjectFormHandler()
         }
         catch (err)
         {
-            console.error(err.message);
+             console.error("Error detallado:", err);  // Para ver el objeto completo de error
+
+             let msg = "Ocurrió un error al guardar la materia.";
+
+            // Verificar si el error contiene un mensaje específico del servidor
+            if (err instanceof Error && err.message.includes("Ya existe una materia con ese nombre")) {
+                msg = "Ya existe una materia con ese nombre.";
+            }
+
+            if (err && err.error) {
+                msg = err.error;
+            }
+
+            alert(msg);
         }
   });
 }

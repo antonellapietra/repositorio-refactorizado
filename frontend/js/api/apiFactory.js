@@ -14,15 +14,20 @@ export function createAPI(moduleName, config = {})
 
     async function sendJSON(method, data) 
     {
-        const res = await fetch(API_URL,
-        {
+        const res = await fetch(API_URL, {
             method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error(`Error en ${method}`);
-        return await res.json();
+        const responseData = await res.json();
+
+        if (!res.ok) {
+            // Lanza el mensaje de error recibido desde PHP, si existe
+            throw new Error(responseData.error || `Error en ${method}`);
+        }
+
+        return responseData;
     }
 
     return {

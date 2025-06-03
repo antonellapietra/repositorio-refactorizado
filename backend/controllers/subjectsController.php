@@ -32,8 +32,22 @@ function handleGet($conn)
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
+    $name = trim($input['name']);
 
-    $result = createSubject($conn, $input['name']);
+    // Verificar si ya existe una materia con ese nombre
+    $sql = "SELECT COUNT(*) as count FROM subjects WHERE name = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $name);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    if ($result['count'] > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "Ya existe una materia con ese nombre"]);
+        return;
+    }
+
+    $result = createSubject($conn, $name);
     if ($result['inserted'] > 0) 
     {
         echo json_encode(["message" => "Materia creada correctamente"]);

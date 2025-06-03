@@ -20,14 +20,10 @@ export function createAPI(moduleName, config = {})
             body: JSON.stringify(data)
         });
 
-        const responseData = await res.json();
-
         if (!res.ok) {
-            // Lanza el mensaje de error recibido desde PHP, si existe
-            throw new Error(responseData.error || `Error en ${method}`);
+            throw res;
         }
-
-        return responseData;
+        return await res.json();
     }
 
     return {

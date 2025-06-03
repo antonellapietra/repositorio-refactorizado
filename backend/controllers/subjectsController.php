@@ -80,14 +80,28 @@ function handlePut($conn)
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
+    $subject_id = $input['id'];
+
+    // Verifica si la materia está involucrada en alguna relación con un estudiante
+    $sql = "SELECT student_id FROM students_subjects WHERE subject_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $subject_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Si la materia está involucrada en una relación, no la eliminamos
+    if ($result->num_rows > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "No se puede eliminar esta materia porque está involucrada en una relación con estudiantes."]);
+        return;
+    }
+
+    // Si no está involucrada en ninguna relación, procedemos con la eliminación
+    $result = deleteSubject($conn, $subject_id);
     
-    $result = deleteSubject($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
+    if ($result['deleted'] > 0) {
         echo json_encode(["message" => "Materia eliminada correctamente"]);
-    } 
-    else 
-    {
+    } else {
         http_response_code(500);
         echo json_encode(["error" => "No se pudo eliminar"]);
     }

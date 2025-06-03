@@ -146,7 +146,17 @@ async function confirmDelete(id)
     } 
     catch (err) 
     {
+         // Si ocurre un error, lo mostramos
         console.error('Error al borrar:', err.message);
+
+        try {
+            // Leemos el cuerpo del error si el servidor envió uno
+            const errorData = await err.json();
+            alert(errorData.error || "Ocurrió un error desconocido.");
+        } catch (parseError) {
+            // Si no se pudo parsear el error (no vino JSON), mostramos un genérico
+            alert("Hubo un error al intentar eliminar el estudiante. Por favor, inténtelo nuevamente.");
+        }
     }
 }
   

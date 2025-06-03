@@ -66,15 +66,29 @@ function handlePut($conn)
 // Funcion para manejar DELETE -eliminacion de datos
 function handleDelete($conn) 
 {
-    $input = json_decode(file_get_contents("php://input"), true); //intenta eliminar el estudiante con dicho ID
+    $input = json_decode(file_get_contents("php://input"), true);
+    $student_id = $input['id'];
 
-    $result = deleteStudent($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
-        echo json_encode(["message" => "Eliminado correctamente"]);
-    } 
-    else 
-    {
+    // Verifica si el estudiante está involucrado en alguna relación con una materia
+    $sql = "SELECT subject_id FROM students_subjects WHERE student_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Si el estudiante está involucrado en alguna relación, no lo eliminamos
+    if ($result->num_rows > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "No se puede eliminar este estudiante porque está vinculado a una o más materias."]);
+        return;
+    }
+
+    // Si no está vinculado a ninguna materia, procedemos con la eliminación
+    $result = deleteStudent($conn, $student_id);
+    
+    if ($result['deleted'] > 0) {
+        echo json_encode(["message" => "Estudiante eliminado correctamente"]);
+    } else {
         http_response_code(500);
         echo json_encode(["error" => "No se pudo eliminar"]);
     }
